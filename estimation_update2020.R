@@ -1,8 +1,9 @@
 
-# 昨年度評価の再現
+### 2020年6月までデータを更新して計算
 
 # please change here --------------------------------------------
-dirname = "C:/Users/00007802/Dropbox/saVAST_egg"
+dirname = "C:/Users/00007802/Dropbox/saba_egg/2020"
+# dirname = "~/git/gomasaVAST"
 
 # packages ------------------------------------------------------
 ##=====if needed=====##
@@ -21,15 +22,13 @@ dirname = "C:/Users/00007802/Dropbox/saVAST_egg"
 ##i confirmed that the VAST can be installed in the latest version of R (version 3.6.1) and RStudio (Version 1.2.1335).
 #devtools::install_github("james-thorson/VAST", INSTALL_opts = c("--no-multiarch --no-test-load"))
 
-
 require(dplyr)
 require(TMB)
 require(VAST)
 
-
 # estimation ----------------------------------------------------
 setwd(dir = dirname)
-data = read.csv("df_egg_saba2.csv", fileEncoding = "CP932")
+data = read.csv("df_egg_saba2020.csv", fileEncoding = "CP932")
 head(data)
 sakana = c("chub", "spotted")[2]
 df = filter(data, area_no < 4, between(month, 1, 6)) %>% select(-area, -area_no, -mean_SST, -mean_salinity)
@@ -64,7 +63,7 @@ Region = "other"
 #Species_set = unique(df$Month)
 
 ###3.5 Save settings###
-DateFile = paste0(getwd(), "/vast", Sys.Date(), "_lnorm_log", n_x, sakana, "fixed")
+DateFile = paste0(getwd(), "/vast", Sys.Date(), "_lnorm_log", n_x, "_",sakana, "_fixed")
 dir.create(DateFile)
 Record = list(Version = Version, Method = Method, grid_size_km = grid_size_km, n_x = n_x, 
               FieldConfig = FieldConfig, RhoConfig = RhoConfig, OverdispersionConfig = OverdispersionConfig, 
@@ -143,19 +142,12 @@ TmbList = VAST::make_model(TmbData = TmbData,
                            Method = Spatial_List$Method)
 
 Obj = TmbList[["Obj"]]
-Opt = TMBhelper::Optimize(obj = Obj,
+Opt = TMBhelper::fit_tmb(obj = Obj,
                           lower = TmbList[["Lower"]],
                           upper = TmbList[["Upper"]],
                           getsd = TRUE,
                           savedir = DateFile,
                           bias.correct = TRUE)
-
-# Opt = TMBhelper::fit_tmb(obj = Obj, 
-#                           lower = TmbList[["Lower"]], 
-#                           upper = TmbList[["Upper"]],
-#                           getsd = TRUE, 
-#                           savedir = DateFile, 
-#                           bias.correct = TRUE)
 
 Report = Obj$report()
 Save = list("Opt" = Opt, 
