@@ -179,5 +179,4 @@ Index = plot_biomass_index( DirName=DateFile, TmbData=TmbData, Sdreport=Opt[["SD
 pander::pandoc.table( Index$Table[,c("Year","Fleet","Estimate_metric_tons","SD_log","SD_mt")] ) 
 plot_range_index(Report=Report, TmbData=TmbData, Sdreport=Opt[["SD"]], Znames=colnames(TmbData$Z_xm), PlotDir=DateFile, Year_Set=Year_Set)
 
-# 2019年評価のものと一致することを確認(2020/08/27)
 
