@@ -49,3 +49,4 @@ vignettes/*.pdf
 *.xls
 *.pptx
 *.docx
+.Rproj.user
